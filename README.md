@@ -1,6 +1,8 @@
 # erdemOS
 Simple Linux userspace init program that boots with the host system's Linux kernel in QEMU.
 
+![erdemOS 0.0.1](doc/erdemOS_0_0_1.png)
+
 ## Requirements
 - gcc (with static linking support)
 - qemu-system-x86_64
