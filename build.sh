@@ -29,7 +29,9 @@ INITRAMFS_DIR="$OUTPUT_DIR/initramfs"
 CFLAGS="-Wall -Wextra -O2 -static"
 
 # Outputs
-OUTPUT_BIN="$OUTPUT_DIR/init"
+OUTPUT_INIT="$OUTPUT_DIR/init"
+OUTPUT_ERSH="$OUTPUT_DIR/ersh"
+OUTPUT_POWEROFF="$OUTPUT_DIR/poweroff"
 INITRAMFS_FILE="$OUTPUT_DIR/initramfs.cpio.gz"
 
 # Helper functions
@@ -45,17 +47,27 @@ done
 # Create output directory
 mkdir -p "$OUTPUT_DIR"
 
-info "[1/2] Compiling init userspace program (static)"
-"$CC" $CFLAGS "$SRC_DIR/init.c" -o "$OUTPUT_BIN"
+info "[1/4] Compiling init userspace program (static)"
+"$CC" $CFLAGS "$SRC_DIR/init.c" -o "$OUTPUT_INIT"
 
-info "[2/2] Creating initramfs with init binary"
+info "[2/4] Compiling ersh shell (static)"
+"$CC" $CFLAGS "$SRC_DIR/ersh.c" -o "$OUTPUT_ERSH"
+
+info "[3/4] Compiling poweroff utility (static)"
+"$CC" $CFLAGS "$SRC_DIR/poweroff.c" -o "$OUTPUT_POWEROFF"
+
+info "[4/4] Creating initramfs with all binaries"
 # Clean and create initramfs directory
 rm -rf "$INITRAMFS_DIR"
 mkdir -p "$INITRAMFS_DIR/bin"
 
-# Copy binary
-cp "$OUTPUT_BIN" "$INITRAMFS_DIR/bin/init"
+# Copy binaries
+cp "$OUTPUT_INIT" "$INITRAMFS_DIR/bin/init"
+cp "$OUTPUT_ERSH" "$INITRAMFS_DIR/bin/ersh"
+cp "$OUTPUT_POWEROFF" "$INITRAMFS_DIR/bin/poweroff"
 chmod +x "$INITRAMFS_DIR/bin/init"
+chmod +x "$INITRAMFS_DIR/bin/ersh"
+chmod +x "$INITRAMFS_DIR/bin/poweroff"
 
 # Package into initramfs
 cd "$INITRAMFS_DIR"
@@ -66,5 +78,7 @@ cd "$ROOT_DIR"
 rm -rf "$INITRAMFS_DIR"
 
 info "Build complete:"
-info "  Binary:    $OUTPUT_BIN"
-info "  Initramfs: $INITRAMFS_FILE"
+info "  Init binary:     $OUTPUT_INIT"
+info "  Ersh binary:     $OUTPUT_ERSH"
+info "  Poweroff binary: $OUTPUT_POWEROFF"
+info "  Initramfs:       $INITRAMFS_FILE"

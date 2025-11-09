@@ -13,6 +13,16 @@
 // limitations under the License.
 
 #include <unistd.h>
+#include <signal.h>
+#include <sys/wait.h>
+#include <string.h>
+#include "../include/colors.h"
+
+// Add proper process reaping
+void sigchld_handler(int sig) {
+    (void)sig;  // Unused parameter
+    while (waitpid(-1, NULL, WNOHANG) > 0);
+}
 
 int main(void) {
     // Clear screen using ANSI escape code
@@ -23,12 +33,24 @@ int main(void) {
     }
     
     // Print message
-    const char msg[] = "Welcome to erdemOS!\n";
+    const char msg[] = ERDEMOS_PRIMARY_COLOR "Welcome to erdemOS!\n";
     ret = write(1, msg, sizeof(msg) - 1);
     if (ret < 0) {
         return 1;
     }
     
-    // Infinite loop to keep the program running
-    while(1);
+    // Setup signal handlers
+    signal(SIGCHLD, sigchld_handler);
+    
+    // Fork and exec a shell
+    pid_t pid = fork();
+    if (pid == 0) {
+        execl("/bin/ersh", "ersh", NULL);
+        _exit(1);
+    }
+    
+    // Wait for children instead of infinite loop
+    while(1) {
+        pause();
+    }
 }
