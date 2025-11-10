@@ -17,6 +17,7 @@
 #include <sys/wait.h>
 #include <string.h>
 #include "../include/colors.h"
+#include "../include/version.h"
 
 // Add proper process reaping
 void sigchld_handler(int sig) {
@@ -33,7 +34,7 @@ int main(void) {
     }
     
     // Print message
-    const char msg[] = ERDEMOS_PRIMARY_COLOR "Welcome to erdemOS!\n";
+    const char msg[] = ERDEMOS_PRIMARY_COLOR "Welcome to erdemOS " ERDEMOS_VERSION "!\n";
     ret = write(1, msg, sizeof(msg) - 1);
     if (ret < 0) {
         return 1;

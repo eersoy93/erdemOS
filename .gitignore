@@ -56,3 +56,4 @@ dkms.conf
 
 # erdemOS outputs
 output/
+include/version.h

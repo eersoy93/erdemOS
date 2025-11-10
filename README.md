@@ -1,7 +1,7 @@
 # erdemOS
 Simple Linux userspace environment with a custom init system and shell (ersh) that boots with the host system's Linux kernel in QEMU.
 
-![erdemOS 0.0.2](doc/erdemOS_0_0_2.png)
+![erdemOS 0.0.3](doc/erdemOS_0_0_3.png)
 
 ## Features
 - **Custom init system** - Minimal init process with proper signal handling
@@ -28,10 +28,14 @@ On Debian/Ubuntu: `sudo apt-get install build-essential qemu-system-x86 cpio gzi
 ## ersh - Erdem Shell
 The custom shell includes the following built-in commands:
 - `cd <dir>` - Change directory
-- `pwd` - Print working directory
-- `help` - Show built-in commands
 - `exit` - Exit shell (returns to init)
+- `help [command]` - Show built-in commands or detailed help for a specific command
+- `ls [-al] [dir]` - List directory contents (supports -a for all files, -l for long format)
+- `mkdir <dir>` - Create directory
 - `poweroff` - Exit shell and power off the system
+- `pwd` - Print working directory
+- `rm [-rf] <file/dir>` - Remove file or directory (supports -r/-R for recursive, -f for force)
+- `touch <file>` - Create empty file
 
 External commands can also be executed if available in the initramfs.
 
@@ -48,6 +52,8 @@ External commands can also be executed if available in the initramfs.
 - `src/ersh.c` - Custom shell with built-in commands
 - `src/poweroff.c` - Power off utility using Linux reboot syscall
 - `include/colors.h` - ANSI color definitions for erdemOS
+- `include/version.h` - Version definitions generated from VERSION file
+- `VERSION` - Project version number (currently 0.0.3)
 - `build.sh` - Compiles all programs and creates initramfs
 - `run.sh` - Launches QEMU with the host kernel
 - `clean.sh` - Removes build artifacts

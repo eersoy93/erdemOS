@@ -16,4 +16,4 @@
 
 set -e
 
-rm -rf output
+rm -rf output include/version.h
