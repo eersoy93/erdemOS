@@ -131,16 +131,6 @@ static int builtin_help(char **args) {
             write_str(ERDEMOS_PRIMARY_COLOR "Shows general help or detailed help for a specific command.\n" COLOR_RESET);
             return 0;
         }
-        if (strcmp(cmd, "kbd") == 0) {
-            write_str(ERDEMOS_COMMAND_COLOR "kbd" ERDEMOS_PRIMARY_COLOR " - Change keyboard layout\n");
-            write_str(ERDEMOS_PRIMARY_COLOR "Usage: " ERDEMOS_COMMAND_COLOR "kbd [layout]" COLOR_RESET "\n");
-            write_str(ERDEMOS_PRIMARY_COLOR "Changes the keyboard layout.\n");
-            write_str("Supported layouts:\n");
-            write_str("  trq     Turkish Q layout\n");
-            write_str("  trf     Turkish F layout\n");
-            write_str("  us      English (US) layout\n" COLOR_RESET);
-            return 0;
-        }
         if (strcmp(cmd, "license") == 0) {
             write_str(ERDEMOS_COMMAND_COLOR "license" ERDEMOS_PRIMARY_COLOR " - Show license\n");
             write_str(ERDEMOS_PRIMARY_COLOR "Usage: " ERDEMOS_COMMAND_COLOR "license" COLOR_RESET "\n");
@@ -209,8 +199,7 @@ static int builtin_help(char **args) {
     write_str(ERDEMOS_COMMAND_COLOR "cd [dir]" ERDEMOS_PRIMARY_COLOR "            - Change directory\n");
     write_str(ERDEMOS_COMMAND_COLOR "exit" ERDEMOS_PRIMARY_COLOR "                - Exit shell\n");
     write_str(ERDEMOS_COMMAND_COLOR "help [command]" ERDEMOS_PRIMARY_COLOR "      - Show this help\n");
-    write_str(ERDEMOS_COMMAND_COLOR "kbd [layout]" ERDEMOS_PRIMARY_COLOR "       - Change keyboard layout\n");
-    write_str(ERDEMOS_COMMAND_COLOR "license" ERDEMOS_PRIMARY_COLOR "             - Show license\n");
+    write_str(ERDEMOS_COMMAND_COLOR "license" ERDEMOS_PRIMARY_COLOR "             - Show copyright and license\n");
     write_str(ERDEMOS_COMMAND_COLOR "ls [-al] [dir]" ERDEMOS_PRIMARY_COLOR "      - List directory contents\n");
     write_str(ERDEMOS_COMMAND_COLOR "mkdir [dir]" ERDEMOS_PRIMARY_COLOR "         - Create directory\n");
     write_str(ERDEMOS_COMMAND_COLOR "poweroff" ERDEMOS_PRIMARY_COLOR "            - Exit shell and power off system\n");
@@ -220,55 +209,6 @@ static int builtin_help(char **args) {
     write_str(ERDEMOS_COMMAND_COLOR "ver" ERDEMOS_PRIMARY_COLOR "                 - Show version\n");
     write_str("\nType " ERDEMOS_COMMAND_COLOR "'help [command]'" ERDEMOS_PRIMARY_COLOR " for detailed help on a specific command.\n");
     return 0;
-}
-
-static int builtin_kbd(char **args) {
-    if (args[1] == NULL) {
-        write_str(ERDEMOS_ERROR_COLOR "ersh: kbd: missing argument" COLOR_RESET "\n");
-        write_str(ERDEMOS_PRIMARY_COLOR "Usage: kbd [layout] (trq, trf, us)\n" COLOR_RESET);
-        return 1;
-    }
-    
-    const char *layout = NULL;
-    
-    if (strcmp(args[1], "trq") == 0) {
-        layout = "trq";
-    } else if (strcmp(args[1], "trf") == 0) {
-        layout = "trf";
-    } else if (strcmp(args[1], "us") == 0) {
-        layout = "us";
-    } else {
-        write_str(ERDEMOS_ERROR_COLOR "ersh: kbd: unknown layout: " COLOR_RESET);
-        write_str(args[1]);
-        write_str("\n");
-        write_str(ERDEMOS_PRIMARY_COLOR "Supported layouts: trq, trf, us\n" COLOR_RESET);
-        return 1;
-    }
-    
-    // Fork and exec loadkeys
-    pid_t pid = fork();
-    if (pid == 0) {
-        // Child process
-        execl("/bin/loadkeys", "loadkeys", layout, NULL);
-        write_str(ERDEMOS_ERROR_COLOR "ersh: kbd: loadkeys command not found" COLOR_RESET "\n");
-        _exit(127);
-    } else if (pid < 0) {
-        write_str(ERDEMOS_ERROR_COLOR "ersh: kbd: fork failed" COLOR_RESET "\n");
-        return 1;
-    } else {
-        // Parent process
-        int status;
-        waitpid(pid, &status, 0);
-        if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
-            write_str(ERDEMOS_PRIMARY_COLOR "Keyboard layout changed to: ");
-            write_str(args[1]);
-            write_str(COLOR_RESET "\n");
-            return 0;
-        } else {
-            write_str(ERDEMOS_ERROR_COLOR "ersh: kbd: failed to change keyboard layout" COLOR_RESET "\n");
-            return 1;
-        }
-    }
 }
 
 static int builtin_license(char **args) {
@@ -283,7 +223,7 @@ static int builtin_license(char **args) {
     write_str(ERDEMOS_PRIMARY_COLOR "distributed under the License is distributed on an \"AS IS\" BASIS,\n");
     write_str(ERDEMOS_PRIMARY_COLOR "WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n");
     write_str(ERDEMOS_PRIMARY_COLOR "See the License for the specific language governing permissions and\n");
-    write_str(ERDEMOS_PRIMARY_COLOR "limitations under the License.\n" COLOR_RESET "\n");
+    write_str(ERDEMOS_PRIMARY_COLOR "limitations under the License.\n" COLOR_RESET);
     return 0;
 }
 
@@ -581,9 +521,6 @@ static int execute(char **args) {
     }
     if (strcmp(args[0], "help") == 0) {
         return builtin_help(args);
-    }
-    if (strcmp(args[0], "kbd") == 0) {
-        return builtin_kbd(args);
     }
     if (strcmp(args[0], "license") == 0) {
         return builtin_license(args);

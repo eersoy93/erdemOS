@@ -32,7 +32,6 @@ CFLAGS="-Wall -Wextra -O2 -static"
 OUTPUT_INIT="$OUTPUT_DIR/init"
 OUTPUT_ERSH="$OUTPUT_DIR/ersh"
 OUTPUT_POWEROFF="$OUTPUT_DIR/poweroff"
-OUTPUT_LOADKEYS="$OUTPUT_DIR/loadkeys"
 INITRAMFS_FILE="$OUTPUT_DIR/initramfs.cpio.gz"
 
 # Helper functions
@@ -49,7 +48,7 @@ done
 mkdir -p "$OUTPUT_DIR"
 
 # Generate version.h from VERSION file
-info "[1/6] Generating version.h from VERSION file"
+info "[1/5] Generating version.h from VERSION file"
 
 VERSION=$(cat VERSION | tr -d '[:space:]')
 VERSION_MAJOR=$(echo "$VERSION" | cut -d. -f1)
@@ -82,19 +81,16 @@ cat > include/version.h << EOF
 #endif // VERSION_H
 EOF
 
-info "[2/6] Compiling init userspace program (static)"
+info "[2/5] Compiling init userspace program (static)"
 "$CC" $CFLAGS "$SRC_DIR/init.c" -o "$OUTPUT_INIT"
 
-info "[3/6] Compiling ersh shell (static)"
+info "[3/5] Compiling ersh shell (static)"
 "$CC" $CFLAGS "$SRC_DIR/ersh.c" -o "$OUTPUT_ERSH"
 
-info "[4/6] Compiling poweroff utility (static)"
+info "[4/5] Compiling poweroff utility (static)"
 "$CC" $CFLAGS "$SRC_DIR/poweroff.c" -o "$OUTPUT_POWEROFF"
 
-info "[5/6] Compiling loadkeys utility (static)"
-"$CC" $CFLAGS "$SRC_DIR/loadkeys.c" -o "$OUTPUT_LOADKEYS"
-
-info "[6/6] Creating initramfs with all binaries"
+info "[5/5] Creating initramfs with all binaries"
 
 # Clean and create initramfs directory
 rm -rf "$INITRAMFS_DIR"
@@ -104,11 +100,9 @@ mkdir -p "$INITRAMFS_DIR/bin"
 cp "$OUTPUT_INIT" "$INITRAMFS_DIR/bin/init"
 cp "$OUTPUT_ERSH" "$INITRAMFS_DIR/bin/ersh"
 cp "$OUTPUT_POWEROFF" "$INITRAMFS_DIR/bin/poweroff"
-cp "$OUTPUT_LOADKEYS" "$INITRAMFS_DIR/bin/loadkeys"
 chmod +x "$INITRAMFS_DIR/bin/init"
 chmod +x "$INITRAMFS_DIR/bin/ersh"
 chmod +x "$INITRAMFS_DIR/bin/poweroff"
-chmod +x "$INITRAMFS_DIR/bin/loadkeys"
 
 # Package into initramfs
 cd "$INITRAMFS_DIR"
@@ -123,5 +117,4 @@ info "Build complete:"
 info "  Init binary:     $OUTPUT_INIT"
 info "  Ersh binary:     $OUTPUT_ERSH"
 info "  Poweroff binary: $OUTPUT_POWEROFF"
-info "  Loadkeys binary: $OUTPUT_LOADKEYS"
 info "  Initramfs:       $INITRAMFS_FILE"
