@@ -38,8 +38,9 @@ fi
 # Launch QEMU with the host kernel and our initramfs
 # rdinit=/bin/init tells kernel to use our init from initramfs
 # quiet suppresses most kernel boot messages
+# vga=791 sets 1024x768 16-bit color mode with Unicode support
 sudo qemu-system-x86_64 \
     -kernel "$KERNEL" \
     -initrd "$INITRAMFS" \
-    -append "rdinit=/bin/init quiet" \
+    -append "rdinit=/bin/init quiet vga=785" \
     -m 256M

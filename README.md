@@ -30,27 +30,32 @@ The custom shell includes the following built-in commands:
 - `cd <dir>` - Change directory
 - `exit` - Exit shell (returns to init)
 - `help [command]` - Show built-in commands or detailed help for a specific command
+- `kbd <layout>` - Change keyboard layout (trq for Turkish Q, trf for Turkish F, en for English)
+- `license` - Show license (displays copyright and Apache License 2.0 information)
 - `ls [-al] [dir]` - List directory contents (supports -a for all files, -l for long format)
 - `mkdir <dir>` - Create directory
 - `poweroff` - Exit shell and power off the system
 - `pwd` - Print working directory
 - `rm [-rf] <file/dir>` - Remove file or directory (supports -r/-R for recursive, -f for force)
 - `touch <file>` - Create empty file
+- `ver` - Show version (displays "erdemOS" and version number)
 
 External commands can also be executed if available in the initramfs.
 
 ## How it works
-- Compiles static binaries for init, ersh shell, and poweroff utility
+- Compiles static binaries for init, ersh shell, poweroff utility, and loadkeys utility
 - Creates a minimal initramfs containing all binaries in `/bin/`
 - Boots QEMU with the host's Linux kernel and the custom initramfs
 - The kernel executes `/bin/init` which launches `/bin/ersh`
 - The shell provides an interactive command-line interface
 - Uses ANSI escape codes for colorized terminal output
+- Custom loadkeys utility supports Turkish Q, Turkish F, and English layouts
 
 ## Files
 - `src/init.c` - Init process with signal handling and shell launching
 - `src/ersh.c` - Custom shell with built-in commands
 - `src/poweroff.c` - Power off utility using Linux reboot syscall
+- `src/loadkeys.c` - Keyboard layout loader utility
 - `include/colors.h` - ANSI color definitions for erdemOS
 - `include/version.h` - Version definitions generated from VERSION file
 - `VERSION` - Project version number (currently 0.0.3)
