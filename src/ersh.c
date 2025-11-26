@@ -103,6 +103,13 @@ static int builtin_cd(char **args) {
     return 0;
 }
 
+static int builtin_copyright(char **args) {
+    (void)args;
+    write_str(ERDEMOS_PRIMARY_COLOR "erdemOS " ERDEMOS_VERSION "\n\n");
+    write_str(ERDEMOS_PRIMARY_COLOR "Copyright (c) 2025 Erdem Ersoy (eersoy93)\n" COLOR_RESET);
+    return 0;
+}
+
 static int builtin_exit(char **args) {
     (void)args;
     exit(0);
@@ -117,6 +124,12 @@ static int builtin_help(char **args) {
             write_str(ERDEMOS_COMMAND_COLOR "cd" ERDEMOS_PRIMARY_COLOR " - Change directory\n");
             write_str(ERDEMOS_PRIMARY_COLOR "Usage: " ERDEMOS_COMMAND_COLOR "cd [directory]" COLOR_RESET "\n");
             write_str(ERDEMOS_PRIMARY_COLOR "Changes the current working directory to the specified path.\n" COLOR_RESET);
+            return 0;
+        }
+        if (strcmp(cmd, "copyright") == 0) {
+            write_str(ERDEMOS_COMMAND_COLOR "copyright" ERDEMOS_PRIMARY_COLOR " - Show copyright\n");
+            write_str(ERDEMOS_PRIMARY_COLOR "Usage: " ERDEMOS_COMMAND_COLOR "copyright" COLOR_RESET "\n");
+            write_str(ERDEMOS_PRIMARY_COLOR "Displays copyright information.\n" COLOR_RESET);
             return 0;
         }
         if (strcmp(cmd, "exit") == 0) {
@@ -134,7 +147,17 @@ static int builtin_help(char **args) {
         if (strcmp(cmd, "license") == 0) {
             write_str(ERDEMOS_COMMAND_COLOR "license" ERDEMOS_PRIMARY_COLOR " - Show license\n");
             write_str(ERDEMOS_PRIMARY_COLOR "Usage: " ERDEMOS_COMMAND_COLOR "license" COLOR_RESET "\n");
-            write_str(ERDEMOS_PRIMARY_COLOR "Displays copyright and license information.\n" COLOR_RESET);
+            write_str(ERDEMOS_PRIMARY_COLOR "Displays license information.\n" COLOR_RESET);
+            return 0;
+        }
+        if (strcmp(cmd, "loadkeys") == 0) {
+            write_str(ERDEMOS_COMMAND_COLOR "loadkeys" ERDEMOS_PRIMARY_COLOR " - Load keyboard layout\n");
+            write_str(ERDEMOS_PRIMARY_COLOR "Usage: " ERDEMOS_COMMAND_COLOR "loadkeys [us|trq|trf]" COLOR_RESET "\n");
+            write_str(ERDEMOS_PRIMARY_COLOR "Changes the keyboard layout.\n");
+            write_str("Layouts:\n");
+            write_str("  us   English (US) keyboard layout\n");
+            write_str("  trq  Turkish Q keyboard layout\n");
+            write_str("  trf  Turkish F keyboard layout\n" COLOR_RESET);
             return 0;
         }
         if (strcmp(cmd, "ls") == 0) {
@@ -179,9 +202,9 @@ static int builtin_help(char **args) {
             write_str(ERDEMOS_PRIMARY_COLOR "Creates an empty file with the specified name.\n" COLOR_RESET);
             return 0;
         }
-        if (strcmp(cmd, "ver") == 0) {
-            write_str(ERDEMOS_COMMAND_COLOR "ver" ERDEMOS_PRIMARY_COLOR " - Show version\n");
-            write_str(ERDEMOS_PRIMARY_COLOR "Usage: " ERDEMOS_COMMAND_COLOR "ver" COLOR_RESET "\n");
+        if (strcmp(cmd, "version") == 0) {
+            write_str(ERDEMOS_COMMAND_COLOR "version" ERDEMOS_PRIMARY_COLOR " - Show version\n");
+            write_str(ERDEMOS_PRIMARY_COLOR "Usage: " ERDEMOS_COMMAND_COLOR "version" COLOR_RESET "\n");
             write_str(ERDEMOS_PRIMARY_COLOR "Displays the erdemOS version number.\n" COLOR_RESET);
             return 0;
         }
@@ -197,24 +220,24 @@ static int builtin_help(char **args) {
     write_str(ERDEMOS_PRIMARY_COLOR "ersh - Erdem Shell\n\n");
     write_str(ERDEMOS_PRIMARY_COLOR "Built-in commands:\n\n");
     write_str(ERDEMOS_COMMAND_COLOR "cd [dir]" ERDEMOS_PRIMARY_COLOR "            - Change directory\n");
+    write_str(ERDEMOS_COMMAND_COLOR "copyright" ERDEMOS_PRIMARY_COLOR "           - Show copyright\n");
     write_str(ERDEMOS_COMMAND_COLOR "exit" ERDEMOS_PRIMARY_COLOR "                - Exit shell\n");
     write_str(ERDEMOS_COMMAND_COLOR "help [command]" ERDEMOS_PRIMARY_COLOR "      - Show this help\n");
-    write_str(ERDEMOS_COMMAND_COLOR "license" ERDEMOS_PRIMARY_COLOR "             - Show copyright and license\n");
+    write_str(ERDEMOS_COMMAND_COLOR "license" ERDEMOS_PRIMARY_COLOR "             - Show license\n");
+    write_str(ERDEMOS_COMMAND_COLOR "loadkeys [layout]" ERDEMOS_PRIMARY_COLOR "   - Load keyboard layout (us|trq|trf)\n");
     write_str(ERDEMOS_COMMAND_COLOR "ls [-al] [dir]" ERDEMOS_PRIMARY_COLOR "      - List directory contents\n");
     write_str(ERDEMOS_COMMAND_COLOR "mkdir [dir]" ERDEMOS_PRIMARY_COLOR "         - Create directory\n");
     write_str(ERDEMOS_COMMAND_COLOR "poweroff" ERDEMOS_PRIMARY_COLOR "            - Exit shell and power off system\n");
     write_str(ERDEMOS_COMMAND_COLOR "pwd" ERDEMOS_PRIMARY_COLOR "                 - Print working directory\n");
     write_str(ERDEMOS_COMMAND_COLOR "rm [-rf] [file/dir]" ERDEMOS_PRIMARY_COLOR " - Remove file or directory\n");
     write_str(ERDEMOS_COMMAND_COLOR "touch [file]" ERDEMOS_PRIMARY_COLOR "        - Create empty file\n");
-    write_str(ERDEMOS_COMMAND_COLOR "ver" ERDEMOS_PRIMARY_COLOR "                 - Show version\n");
+    write_str(ERDEMOS_COMMAND_COLOR "version" ERDEMOS_PRIMARY_COLOR "             - Show version\n");
     write_str("\nType " ERDEMOS_COMMAND_COLOR "'help [command]'" ERDEMOS_PRIMARY_COLOR " for detailed help on a specific command.\n");
     return 0;
 }
 
 static int builtin_license(char **args) {
     (void)args;
-    write_str(ERDEMOS_PRIMARY_COLOR "erdemOS " ERDEMOS_VERSION "\n\n");
-    write_str(ERDEMOS_PRIMARY_COLOR "Copyright (c) 2025 Erdem Ersoy (eersoy93)\n\n");
     write_str(ERDEMOS_PRIMARY_COLOR "Licensed under the Apache License, Version 2.0 (the \"License\");\n");
     write_str(ERDEMOS_PRIMARY_COLOR "you may not use this file except in compliance with the License.\n");
     write_str(ERDEMOS_PRIMARY_COLOR "You may obtain a copy of the License at\n\n");
@@ -225,6 +248,46 @@ static int builtin_license(char **args) {
     write_str(ERDEMOS_PRIMARY_COLOR "See the License for the specific language governing permissions and\n");
     write_str(ERDEMOS_PRIMARY_COLOR "limitations under the License.\n" COLOR_RESET);
     return 0;
+}
+
+static int builtin_loadkeys(char **args) {
+    if (args[1] == NULL) {
+        write_str(ERDEMOS_ERROR_COLOR "ersh: loadkeys: missing argument" COLOR_RESET "\n");
+        write_str(ERDEMOS_PRIMARY_COLOR "Usage: " ERDEMOS_COMMAND_COLOR "loadkeys [us|trq|trf]" COLOR_RESET "\n");
+        return 1;
+    }
+    
+    const char *layout = args[1];
+    
+    // Validate layout parameter
+    if (strcmp(layout, "us") != 0 && 
+        strcmp(layout, "trq") != 0 && 
+        strcmp(layout, "trf") != 0) {
+        write_str(ERDEMOS_ERROR_COLOR "ersh: loadkeys: invalid layout: " COLOR_RESET);
+        write_str(layout);
+        write_str("\n");
+        write_str(ERDEMOS_PRIMARY_COLOR "Valid layouts: us, trq, trf\n" COLOR_RESET);
+        return 1;
+    }
+    
+    // Execute the loadkeys binary
+    pid_t pid = fork();
+    if (pid == 0) {
+        // Child process
+        char *loadkeys_args[] = {"/bin/loadkeys", (char *)layout, NULL};
+        execv("/bin/loadkeys", loadkeys_args);
+        // If execv fails, show error
+        write_str(ERDEMOS_ERROR_COLOR "ersh: loadkeys: failed to execute /bin/loadkeys\n" COLOR_RESET);
+        _exit(1);
+    } else if (pid < 0) {
+        write_str(ERDEMOS_ERROR_COLOR "ersh: loadkeys: fork failed\n" COLOR_RESET);
+        return 1;
+    } else {
+        // Parent process - wait for child
+        int status;
+        waitpid(pid, &status, 0);
+        return WIFEXITED(status) ? WEXITSTATUS(status) : 1;
+    }
 }
 
 static int builtin_ls(char **args) {
@@ -500,7 +563,7 @@ static int builtin_touch(char **args) {
     return 0;
 }
 
-static int builtin_ver(char **args) {
+static int builtin_version(char **args) {
     (void)args;
     write_str(ERDEMOS_PRIMARY_COLOR "erdemOS " ERDEMOS_VERSION COLOR_RESET "\n");
     return 0;
@@ -516,6 +579,9 @@ static int execute(char **args) {
     if (strcmp(args[0], "cd") == 0) {
         return builtin_cd(args);
     }
+    if (strcmp(args[0], "copyright") == 0) {
+        return builtin_copyright(args);
+    }
     if (strcmp(args[0], "exit") == 0) {
         return builtin_exit(args);
     }
@@ -524,6 +590,9 @@ static int execute(char **args) {
     }
     if (strcmp(args[0], "license") == 0) {
         return builtin_license(args);
+    }
+    if (strcmp(args[0], "loadkeys") == 0) {
+        return builtin_loadkeys(args);
     }
     if (strcmp(args[0], "ls") == 0) {
         return builtin_ls(args);
@@ -543,8 +612,8 @@ static int execute(char **args) {
     if (strcmp(args[0], "touch") == 0) {
         return builtin_touch(args);
     }
-    if (strcmp(args[0], "ver") == 0) {
-        return builtin_ver(args);
+    if (strcmp(args[0], "version") == 0) {
+        return builtin_version(args);
     }
 
     // Fork and exec external command
