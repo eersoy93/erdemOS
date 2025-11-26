@@ -34,8 +34,10 @@ static void load_turkish_q(int fd) {
     // Turkish specific keys for Turkish Q layout
     // These are common modifications from US layout
     
+    // Normal (unshifted) keys - Table 0
+    entry.kb_table = 0;
+    
     // Scan code 0x1a (US: [) -> Turkish: ğ
-    entry.kb_table = 0; // Normal
     entry.kb_index = 0x1a;
     entry.kb_value = 0xf0; // ğ
     ioctl(fd, KDSKBENT, &entry);
@@ -79,15 +81,145 @@ static void load_turkish_q(int fd) {
     entry.kb_index = 0x35;
     entry.kb_value = '.';
     ioctl(fd, KDSKBENT, &entry);
+    
+    // Shifted keys - Table 1
+    entry.kb_table = 1;
+    
+    // Scan code 0x1a -> Ğ (uppercase)
+    entry.kb_index = 0x1a;
+    entry.kb_value = 0xd0; // Ğ
+    ioctl(fd, KDSKBENT, &entry);
+    
+    // Scan code 0x1b -> Ü (uppercase)
+    entry.kb_index = 0x1b;
+    entry.kb_value = 0xdc; // Ü
+    ioctl(fd, KDSKBENT, &entry);
+    
+    // Scan code 0x27 -> Ş (uppercase)
+    entry.kb_index = 0x27;
+    entry.kb_value = 0xde; // Ş
+    ioctl(fd, KDSKBENT, &entry);
+    
+    // Scan code 0x28 -> İ (uppercase)
+    entry.kb_index = 0x28;
+    entry.kb_value = 0xdd; // İ
+    ioctl(fd, KDSKBENT, &entry);
+    
+    // Scan code 0x29 -> é
+    entry.kb_index = 0x29;
+    entry.kb_value = 0xe9; // é
+    ioctl(fd, KDSKBENT, &entry);
+    
+    // Scan code 0x2b -> ;
+    entry.kb_index = 0x2b;
+    entry.kb_value = ';';
+    ioctl(fd, KDSKBENT, &entry);
+    
+    // Scan code 0x33 -> Ö (uppercase)
+    entry.kb_index = 0x33;
+    entry.kb_value = 0xd6; // Ö
+    ioctl(fd, KDSKBENT, &entry);
+    
+    // Scan code 0x34 -> Ç (uppercase)
+    entry.kb_index = 0x34;
+    entry.kb_value = 0xc7; // Ç
+    ioctl(fd, KDSKBENT, &entry);
+    
+    // Scan code 0x35 -> :
+    entry.kb_index = 0x35;
+    entry.kb_value = ':';
+    ioctl(fd, KDSKBENT, &entry);
+    
+    // Caps Lock table (Table 2) - same as shifted for letters
+    entry.kb_table = 2;
+    
+    // Letters should be uppercase with Caps Lock
+    entry.kb_index = 0x1a;
+    entry.kb_value = 0xd0; // Ğ
+    ioctl(fd, KDSKBENT, &entry);
+    
+    entry.kb_index = 0x1b;
+    entry.kb_value = 0xdc; // Ü
+    ioctl(fd, KDSKBENT, &entry);
+    
+    entry.kb_index = 0x27;
+    entry.kb_value = 0xde; // Ş
+    ioctl(fd, KDSKBENT, &entry);
+    
+    entry.kb_index = 0x28;
+    entry.kb_value = 0xdd; // İ
+    ioctl(fd, KDSKBENT, &entry);
+    
+    entry.kb_index = 0x33;
+    entry.kb_value = 0xd6; // Ö
+    ioctl(fd, KDSKBENT, &entry);
+    
+    entry.kb_index = 0x34;
+    entry.kb_value = 0xc7; // Ç
+    ioctl(fd, KDSKBENT, &entry);
+    
+    // Non-letter keys stay the same with Caps Lock
+    entry.kb_index = 0x29;
+    entry.kb_value = '"';
+    ioctl(fd, KDSKBENT, &entry);
+    
+    entry.kb_index = 0x2b;
+    entry.kb_value = ',';
+    ioctl(fd, KDSKBENT, &entry);
+    
+    entry.kb_index = 0x35;
+    entry.kb_value = '.';
+    ioctl(fd, KDSKBENT, &entry);
+    
+    // Shift+Caps Lock table (Table 3) - inverts: lowercase with Shift+Caps
+    entry.kb_table = 3;
+    
+    entry.kb_index = 0x1a;
+    entry.kb_value = 0xf0; // ğ
+    ioctl(fd, KDSKBENT, &entry);
+    
+    entry.kb_index = 0x1b;
+    entry.kb_value = 0xfc; // ü
+    ioctl(fd, KDSKBENT, &entry);
+    
+    entry.kb_index = 0x27;
+    entry.kb_value = 0xfe; // ş
+    ioctl(fd, KDSKBENT, &entry);
+    
+    entry.kb_index = 0x28;
+    entry.kb_value = 'i';
+    ioctl(fd, KDSKBENT, &entry);
+    
+    entry.kb_index = 0x33;
+    entry.kb_value = 0xf6; // ö
+    ioctl(fd, KDSKBENT, &entry);
+    
+    entry.kb_index = 0x34;
+    entry.kb_value = 0xe7; // ç
+    ioctl(fd, KDSKBENT, &entry);
+    
+    // Shifted symbols stay shifted with Caps Lock
+    entry.kb_index = 0x29;
+    entry.kb_value = 0xe9; // é
+    ioctl(fd, KDSKBENT, &entry);
+    
+    entry.kb_index = 0x2b;
+    entry.kb_value = ';';
+    ioctl(fd, KDSKBENT, &entry);
+    
+    entry.kb_index = 0x35;
+    entry.kb_value = ':';
+    ioctl(fd, KDSKBENT, &entry);
 }
 
 // Turkish F layout modifications
 static void load_turkish_f(int fd) {
     struct kbentry entry;
-    entry.kb_table = 0; // Normal
     
     // Turkish F is a different layout with keys rearranged
-    // This is a simplified version
+    
+    // Normal (unshifted) keys - Table 0
+    entry.kb_table = 0;
     
     // Row 1 (QWERTY row becomes FGĞIOD)
     entry.kb_index = 0x10; entry.kb_value = 'f'; ioctl(fd, KDSKBENT, &entry);
@@ -128,14 +260,148 @@ static void load_turkish_f(int fd) {
     entry.kb_index = 0x33; entry.kb_value = 'b'; ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x34; entry.kb_value = '.'; ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x35; entry.kb_value = ','; ioctl(fd, KDSKBENT, &entry);
+    
+    // Shifted keys - Table 1
+    entry.kb_table = 1;
+    
+    // Row 1 (shifted: FGĞIOD -> uppercase)
+    entry.kb_index = 0x10; entry.kb_value = 'F'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x11; entry.kb_value = 'G'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x12; entry.kb_value = 0xd0; ioctl(fd, KDSKBENT, &entry); // Ğ
+    entry.kb_index = 0x13; entry.kb_value = 'I'; ioctl(fd, KDSKBENT, &entry); // I (capital dotless)
+    entry.kb_index = 0x14; entry.kb_value = 'O'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x15; entry.kb_value = 'D'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x16; entry.kb_value = 'R'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x17; entry.kb_value = 'N'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x18; entry.kb_value = 'H'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x19; entry.kb_value = 'P'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1a; entry.kb_value = 'Q'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1b; entry.kb_value = 'W'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Row 2 (shifted: UİEAÜT -> uppercase)
+    entry.kb_index = 0x1e; entry.kb_value = 'U'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1f; entry.kb_value = 0xdd; ioctl(fd, KDSKBENT, &entry); // İ
+    entry.kb_index = 0x20; entry.kb_value = 'E'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x21; entry.kb_value = 'A'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x22; entry.kb_value = 0xdc; ioctl(fd, KDSKBENT, &entry); // Ü
+    entry.kb_index = 0x23; entry.kb_value = 'T'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x24; entry.kb_value = 'K'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x25; entry.kb_value = 'M'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x26; entry.kb_value = 'L'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x27; entry.kb_value = 'Y'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x28; entry.kb_value = 0xde; ioctl(fd, KDSKBENT, &entry); // Ş
+    entry.kb_index = 0x2b; entry.kb_value = 'X'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Row 3 (shifted: JÖVCÇ -> uppercase)
+    entry.kb_index = 0x2c; entry.kb_value = 'J'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2d; entry.kb_value = 0xd6; ioctl(fd, KDSKBENT, &entry); // Ö
+    entry.kb_index = 0x2e; entry.kb_value = 'V'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2f; entry.kb_value = 'C'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x30; entry.kb_value = 0xc7; ioctl(fd, KDSKBENT, &entry); // Ç
+    entry.kb_index = 0x31; entry.kb_value = 'Z'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x32; entry.kb_value = 'S'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x33; entry.kb_value = 'B'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x34; entry.kb_value = ':'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x35; entry.kb_value = ';'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Caps Lock table (Table 2) - uppercase for letters, normal for symbols
+    entry.kb_table = 2;
+    
+    // Row 1 - uppercase
+    entry.kb_index = 0x10; entry.kb_value = 'F'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x11; entry.kb_value = 'G'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x12; entry.kb_value = 0xd0; ioctl(fd, KDSKBENT, &entry); // Ğ
+    entry.kb_index = 0x13; entry.kb_value = 'I'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x14; entry.kb_value = 'O'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x15; entry.kb_value = 'D'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x16; entry.kb_value = 'R'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x17; entry.kb_value = 'N'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x18; entry.kb_value = 'H'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x19; entry.kb_value = 'P'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1a; entry.kb_value = 'Q'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1b; entry.kb_value = 'W'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Row 2 - uppercase
+    entry.kb_index = 0x1e; entry.kb_value = 'U'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1f; entry.kb_value = 0xdd; ioctl(fd, KDSKBENT, &entry); // İ
+    entry.kb_index = 0x20; entry.kb_value = 'E'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x21; entry.kb_value = 'A'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x22; entry.kb_value = 0xdc; ioctl(fd, KDSKBENT, &entry); // Ü
+    entry.kb_index = 0x23; entry.kb_value = 'T'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x24; entry.kb_value = 'K'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x25; entry.kb_value = 'M'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x26; entry.kb_value = 'L'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x27; entry.kb_value = 'Y'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x28; entry.kb_value = 0xde; ioctl(fd, KDSKBENT, &entry); // Ş
+    entry.kb_index = 0x2b; entry.kb_value = 'X'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Row 3 - uppercase
+    entry.kb_index = 0x2c; entry.kb_value = 'J'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2d; entry.kb_value = 0xd6; ioctl(fd, KDSKBENT, &entry); // Ö
+    entry.kb_index = 0x2e; entry.kb_value = 'V'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2f; entry.kb_value = 'C'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x30; entry.kb_value = 0xc7; ioctl(fd, KDSKBENT, &entry); // Ç
+    entry.kb_index = 0x31; entry.kb_value = 'Z'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x32; entry.kb_value = 'S'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x33; entry.kb_value = 'B'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Symbols stay normal
+    entry.kb_index = 0x34; entry.kb_value = '.'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x35; entry.kb_value = ','; ioctl(fd, KDSKBENT, &entry);
+    
+    // Shift+Caps Lock table (Table 3) - inverts: lowercase with Shift+Caps
+    entry.kb_table = 3;
+    
+    // Row 1 - lowercase
+    entry.kb_index = 0x10; entry.kb_value = 'f'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x11; entry.kb_value = 'g'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x12; entry.kb_value = 0xf0; ioctl(fd, KDSKBENT, &entry); // ğ
+    entry.kb_index = 0x13; entry.kb_value = 0xfd; ioctl(fd, KDSKBENT, &entry); // ı
+    entry.kb_index = 0x14; entry.kb_value = 'o'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x15; entry.kb_value = 'd'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x16; entry.kb_value = 'r'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x17; entry.kb_value = 'n'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x18; entry.kb_value = 'h'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x19; entry.kb_value = 'p'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1a; entry.kb_value = 'q'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1b; entry.kb_value = 'w'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Row 2 - lowercase
+    entry.kb_index = 0x1e; entry.kb_value = 'u'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1f; entry.kb_value = 'i'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x20; entry.kb_value = 'e'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x21; entry.kb_value = 'a'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x22; entry.kb_value = 0xfc; ioctl(fd, KDSKBENT, &entry); // ü
+    entry.kb_index = 0x23; entry.kb_value = 't'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x24; entry.kb_value = 'k'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x25; entry.kb_value = 'm'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x26; entry.kb_value = 'l'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x27; entry.kb_value = 'y'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x28; entry.kb_value = 0xfe; ioctl(fd, KDSKBENT, &entry); // ş
+    entry.kb_index = 0x2b; entry.kb_value = 'x'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Row 3 - lowercase
+    entry.kb_index = 0x2c; entry.kb_value = 'j'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2d; entry.kb_value = 0xf6; ioctl(fd, KDSKBENT, &entry); // ö
+    entry.kb_index = 0x2e; entry.kb_value = 'v'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2f; entry.kb_value = 'c'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x30; entry.kb_value = 0xe7; ioctl(fd, KDSKBENT, &entry); // ç
+    entry.kb_index = 0x31; entry.kb_value = 'z'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x32; entry.kb_value = 's'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x33; entry.kb_value = 'b'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Symbols become shifted versions
+    entry.kb_index = 0x34; entry.kb_value = ':'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x35; entry.kb_value = ';'; ioctl(fd, KDSKBENT, &entry);
 }
 
 // US English layout (restore defaults)
 static void load_us_english(int fd) {
     struct kbentry entry;
-    entry.kb_table = 0; // Normal
     
-    // Restore standard US QWERTY layout
+    // Normal (unshifted) keys - Table 0
+    entry.kb_table = 0;
+    
     // Row 1
     entry.kb_index = 0x10; entry.kb_value = 'q'; ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x11; entry.kb_value = 'w'; ioctl(fd, KDSKBENT, &entry);
@@ -176,6 +442,196 @@ static void load_us_english(int fd) {
     entry.kb_index = 0x33; entry.kb_value = ','; ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x34; entry.kb_value = '.'; ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x35; entry.kb_value = '/'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Shifted keys - Table 1
+    entry.kb_table = 1;
+    
+    // Row 1 (shifted)
+    entry.kb_index = 0x10; entry.kb_value = 'Q'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x11; entry.kb_value = 'W'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x12; entry.kb_value = 'E'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x13; entry.kb_value = 'R'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x14; entry.kb_value = 'T'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x15; entry.kb_value = 'Y'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x16; entry.kb_value = 'U'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x17; entry.kb_value = 'I'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x18; entry.kb_value = 'O'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x19; entry.kb_value = 'P'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1a; entry.kb_value = '{'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1b; entry.kb_value = '}'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Row 2 (shifted)
+    entry.kb_index = 0x1e; entry.kb_value = 'A'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1f; entry.kb_value = 'S'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x20; entry.kb_value = 'D'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x21; entry.kb_value = 'F'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x22; entry.kb_value = 'G'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x23; entry.kb_value = 'H'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x24; entry.kb_value = 'J'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x25; entry.kb_value = 'K'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x26; entry.kb_value = 'L'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x27; entry.kb_value = ':'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x28; entry.kb_value = '"'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x29; entry.kb_value = '~'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2b; entry.kb_value = '|'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Row 3 (shifted)
+    entry.kb_index = 0x2c; entry.kb_value = 'Z'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2d; entry.kb_value = 'X'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2e; entry.kb_value = 'C'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2f; entry.kb_value = 'V'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x30; entry.kb_value = 'B'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x31; entry.kb_value = 'N'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x32; entry.kb_value = 'M'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x33; entry.kb_value = '<'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x34; entry.kb_value = '>'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x35; entry.kb_value = '?'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Numbers row - unshifted (Table 0)
+    entry.kb_table = 0;
+    entry.kb_index = 0x02; entry.kb_value = '1'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x03; entry.kb_value = '2'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x04; entry.kb_value = '3'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x05; entry.kb_value = '4'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x06; entry.kb_value = '5'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x07; entry.kb_value = '6'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x08; entry.kb_value = '7'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x09; entry.kb_value = '8'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x0a; entry.kb_value = '9'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x0b; entry.kb_value = '0'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x0c; entry.kb_value = '-'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x0d; entry.kb_value = '='; ioctl(fd, KDSKBENT, &entry);
+    
+    // Numbers row - shifted (Table 1)
+    entry.kb_table = 1;
+    entry.kb_index = 0x02; entry.kb_value = '!'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x03; entry.kb_value = '@'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x04; entry.kb_value = '#'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x05; entry.kb_value = '$'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x06; entry.kb_value = '%'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x07; entry.kb_value = '^'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x08; entry.kb_value = '&'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x09; entry.kb_value = '*'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x0a; entry.kb_value = '('; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x0b; entry.kb_value = ')'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x0c; entry.kb_value = '_'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x0d; entry.kb_value = '+'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Caps Lock table (Table 2) - uppercase for letters, normal for symbols/numbers
+    entry.kb_table = 2;
+    
+    // Row 1 - uppercase letters
+    entry.kb_index = 0x10; entry.kb_value = 'Q'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x11; entry.kb_value = 'W'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x12; entry.kb_value = 'E'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x13; entry.kb_value = 'R'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x14; entry.kb_value = 'T'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x15; entry.kb_value = 'Y'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x16; entry.kb_value = 'U'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x17; entry.kb_value = 'I'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x18; entry.kb_value = 'O'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x19; entry.kb_value = 'P'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1a; entry.kb_value = '['; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1b; entry.kb_value = ']'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Row 2 - uppercase letters
+    entry.kb_index = 0x1e; entry.kb_value = 'A'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1f; entry.kb_value = 'S'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x20; entry.kb_value = 'D'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x21; entry.kb_value = 'F'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x22; entry.kb_value = 'G'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x23; entry.kb_value = 'H'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x24; entry.kb_value = 'J'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x25; entry.kb_value = 'K'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x26; entry.kb_value = 'L'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x27; entry.kb_value = ';'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x28; entry.kb_value = '\''; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x29; entry.kb_value = '`'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2b; entry.kb_value = '\\'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Row 3 - uppercase letters
+    entry.kb_index = 0x2c; entry.kb_value = 'Z'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2d; entry.kb_value = 'X'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2e; entry.kb_value = 'C'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2f; entry.kb_value = 'V'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x30; entry.kb_value = 'B'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x31; entry.kb_value = 'N'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x32; entry.kb_value = 'M'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x33; entry.kb_value = ','; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x34; entry.kb_value = '.'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x35; entry.kb_value = '/'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Numbers stay normal with Caps Lock
+    entry.kb_index = 0x02; entry.kb_value = '1'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x03; entry.kb_value = '2'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x04; entry.kb_value = '3'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x05; entry.kb_value = '4'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x06; entry.kb_value = '5'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x07; entry.kb_value = '6'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x08; entry.kb_value = '7'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x09; entry.kb_value = '8'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x0a; entry.kb_value = '9'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x0b; entry.kb_value = '0'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x0c; entry.kb_value = '-'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x0d; entry.kb_value = '='; ioctl(fd, KDSKBENT, &entry);
+    
+    // Shift+Caps Lock table (Table 3) - lowercase letters, shifted symbols
+    entry.kb_table = 3;
+    
+    // Row 1 - lowercase letters (inverted)
+    entry.kb_index = 0x10; entry.kb_value = 'q'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x11; entry.kb_value = 'w'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x12; entry.kb_value = 'e'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x13; entry.kb_value = 'r'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x14; entry.kb_value = 't'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x15; entry.kb_value = 'y'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x16; entry.kb_value = 'u'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x17; entry.kb_value = 'i'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x18; entry.kb_value = 'o'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x19; entry.kb_value = 'p'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1a; entry.kb_value = '{'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1b; entry.kb_value = '}'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Row 2 - lowercase letters (inverted)
+    entry.kb_index = 0x1e; entry.kb_value = 'a'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1f; entry.kb_value = 's'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x20; entry.kb_value = 'd'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x21; entry.kb_value = 'f'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x22; entry.kb_value = 'g'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x23; entry.kb_value = 'h'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x24; entry.kb_value = 'j'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x25; entry.kb_value = 'k'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x26; entry.kb_value = 'l'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x27; entry.kb_value = ':'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x28; entry.kb_value = '"'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x29; entry.kb_value = '~'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2b; entry.kb_value = '|'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Row 3 - lowercase letters (inverted)
+    entry.kb_index = 0x2c; entry.kb_value = 'z'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2d; entry.kb_value = 'x'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2e; entry.kb_value = 'c'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2f; entry.kb_value = 'v'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x30; entry.kb_value = 'b'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x31; entry.kb_value = 'n'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x32; entry.kb_value = 'm'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x33; entry.kb_value = '<'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x34; entry.kb_value = '>'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x35; entry.kb_value = '?'; ioctl(fd, KDSKBENT, &entry);
+    
+    // Numbers become shifted symbols with Shift+Caps
+    entry.kb_index = 0x02; entry.kb_value = '!'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x03; entry.kb_value = '@'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x04; entry.kb_value = '#'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x05; entry.kb_value = '$'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x06; entry.kb_value = '%'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x07; entry.kb_value = '^'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x08; entry.kb_value = '&'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x09; entry.kb_value = '*'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x0a; entry.kb_value = '('; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x0b; entry.kb_value = ')'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x0c; entry.kb_value = '_'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x0d; entry.kb_value = '+'; ioctl(fd, KDSKBENT, &entry);
 }
 
 // Load keyboard layout
