@@ -24,6 +24,22 @@
 // Helper macros for key types
 #define LETTER(c) K(KT_LETTER, (c))
 
+// Turkish character Unicode mappings for Linux console
+// Lowercase
+#define TR_g_breve  0x011F  // ğ
+#define TR_u_diaer  0x00FC  // ü  
+#define TR_s_cedil  0x015F  // ş
+#define TR_i_nodot  0x0131  // ı
+#define TR_o_diaer  0x00F6  // ö
+#define TR_c_cedil  0x00E7  // ç
+// Uppercase
+#define TR_G_breve  0x011E  // Ğ
+#define TR_U_diaer  0x00DC  // Ü
+#define TR_S_cedil  0x015E  // Ş
+#define TR_I_dot    0x0130  // İ
+#define TR_O_diaer  0x00D6  // Ö
+#define TR_C_cedil  0x00C7  // Ç
+
 // Simple write wrapper
 static void write_str(const char *str) {
     ssize_t ret = write(1, str, strlen(str));
@@ -42,17 +58,17 @@ static void load_turkish_q(int fd) {
     
     // Scan code 0x1a (US: [) -> Turkish: ğ (letter type)
     entry.kb_index = 0x1a;
-    entry.kb_value = LETTER(0xf0); // ğ
+    entry.kb_value = LETTER(TR_g_breve);
     ioctl(fd, KDSKBENT, &entry);
     
     // Scan code 0x1b (US: ]) -> Turkish: ü (letter type)
     entry.kb_index = 0x1b;
-    entry.kb_value = LETTER(0xfc); // ü
+    entry.kb_value = LETTER(TR_u_diaer);
     ioctl(fd, KDSKBENT, &entry);
     
     // Scan code 0x27 (US: ;) -> Turkish: ş (letter type)
     entry.kb_index = 0x27;
-    entry.kb_value = LETTER(0xfe); // ş
+    entry.kb_value = LETTER(TR_s_cedil);
     ioctl(fd, KDSKBENT, &entry);
     
     // Scan code 0x28 (US: ') -> Turkish: i (letter type)
@@ -72,12 +88,12 @@ static void load_turkish_q(int fd) {
     
     // Scan code 0x33 (US: ,) -> Turkish: ö (letter type)
     entry.kb_index = 0x33;
-    entry.kb_value = LETTER(0xf6); // ö
+    entry.kb_value = LETTER(TR_o_diaer);
     ioctl(fd, KDSKBENT, &entry);
     
     // Scan code 0x34 (US: .) -> Turkish: ç (letter type)
     entry.kb_index = 0x34;
-    entry.kb_value = LETTER(0xe7); // ç
+    entry.kb_value = LETTER(TR_c_cedil);
     ioctl(fd, KDSKBENT, &entry);
     
     // Scan code 0x35 (US: /) -> Turkish: .
@@ -120,22 +136,22 @@ static void load_turkish_q(int fd) {
     
     // Scan code 0x1a -> Ğ (uppercase letter type)
     entry.kb_index = 0x1a;
-    entry.kb_value = LETTER(0xd0); // Ğ
+    entry.kb_value = LETTER(TR_G_breve);
     ioctl(fd, KDSKBENT, &entry);
     
     // Scan code 0x1b -> Ü (uppercase letter type)
     entry.kb_index = 0x1b;
-    entry.kb_value = LETTER(0xdc); // Ü
+    entry.kb_value = LETTER(TR_U_diaer);
     ioctl(fd, KDSKBENT, &entry);
     
     // Scan code 0x27 -> Ş (uppercase letter type)
     entry.kb_index = 0x27;
-    entry.kb_value = LETTER(0xde); // Ş
+    entry.kb_value = LETTER(TR_S_cedil);
     ioctl(fd, KDSKBENT, &entry);
     
     // Scan code 0x28 -> İ (uppercase letter type)
     entry.kb_index = 0x28;
-    entry.kb_value = LETTER(0xdd); // İ
+    entry.kb_value = LETTER(TR_I_dot);
     ioctl(fd, KDSKBENT, &entry);
     
     // Scan code 0x29 -> é
@@ -150,12 +166,12 @@ static void load_turkish_q(int fd) {
     
     // Scan code 0x33 -> Ö (uppercase letter type)
     entry.kb_index = 0x33;
-    entry.kb_value = LETTER(0xd6); // Ö
+    entry.kb_value = LETTER(TR_O_diaer);
     ioctl(fd, KDSKBENT, &entry);
     
     // Scan code 0x34 -> Ç (uppercase letter type)
     entry.kb_index = 0x34;
-    entry.kb_value = LETTER(0xc7); // Ç
+    entry.kb_value = LETTER(TR_C_cedil);
     ioctl(fd, KDSKBENT, &entry);
     
     // Scan code 0x35 -> :
@@ -167,48 +183,48 @@ static void load_turkish_q(int fd) {
     entry.kb_table = 2;
     
     // All standard letter keys uppercase (QWERTY row)
-    entry.kb_index = 0x10; entry.kb_value = 'Q'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x11; entry.kb_value = 'W'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x12; entry.kb_value = 'E'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x13; entry.kb_value = 'R'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x14; entry.kb_value = 'T'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x15; entry.kb_value = 'Y'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x16; entry.kb_value = 'U'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x17; entry.kb_value = 'I'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x18; entry.kb_value = 'O'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x19; entry.kb_value = 'P'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x10; entry.kb_value = LETTER('Q'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x11; entry.kb_value = LETTER('W'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x12; entry.kb_value = LETTER('E'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x13; entry.kb_value = LETTER('R'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x14; entry.kb_value = LETTER('T'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x15; entry.kb_value = LETTER('Y'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x16; entry.kb_value = LETTER('U'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x17; entry.kb_value = LETTER('I'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x18; entry.kb_value = LETTER('O'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x19; entry.kb_value = LETTER('P'); ioctl(fd, KDSKBENT, &entry);
     
     // Turkish-specific keys (uppercase)
-    entry.kb_index = 0x1a; entry.kb_value = 0xd0; ioctl(fd, KDSKBENT, &entry); // Ğ
-    entry.kb_index = 0x1b; entry.kb_value = 0xdc; ioctl(fd, KDSKBENT, &entry); // Ü
+    entry.kb_index = 0x1a; entry.kb_value = LETTER(TR_G_breve); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1b; entry.kb_value = LETTER(TR_U_diaer); ioctl(fd, KDSKBENT, &entry);
     
     // ASDF row uppercase
-    entry.kb_index = 0x1e; entry.kb_value = 'A'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x1f; entry.kb_value = 'S'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x20; entry.kb_value = 'D'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x21; entry.kb_value = 'F'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x22; entry.kb_value = 'G'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x23; entry.kb_value = 'H'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x24; entry.kb_value = 'J'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x25; entry.kb_value = 'K'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x26; entry.kb_value = 'L'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1e; entry.kb_value = LETTER('A'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1f; entry.kb_value = LETTER('S'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x20; entry.kb_value = LETTER('D'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x21; entry.kb_value = LETTER('F'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x22; entry.kb_value = LETTER('G'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x23; entry.kb_value = LETTER('H'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x24; entry.kb_value = LETTER('J'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x25; entry.kb_value = LETTER('K'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x26; entry.kb_value = LETTER('L'); ioctl(fd, KDSKBENT, &entry);
     
     // Turkish-specific keys
-    entry.kb_index = 0x27; entry.kb_value = 0xde; ioctl(fd, KDSKBENT, &entry); // Ş
-    entry.kb_index = 0x28; entry.kb_value = 0xdd; ioctl(fd, KDSKBENT, &entry); // İ
+    entry.kb_index = 0x27; entry.kb_value = LETTER(TR_S_cedil); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x28; entry.kb_value = LETTER(TR_I_dot); ioctl(fd, KDSKBENT, &entry);
     
     // ZXCV row uppercase
-    entry.kb_index = 0x2c; entry.kb_value = 'Z'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x2d; entry.kb_value = 'X'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x2e; entry.kb_value = 'C'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x2f; entry.kb_value = 'V'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x30; entry.kb_value = 'B'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x31; entry.kb_value = 'N'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x32; entry.kb_value = 'M'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2c; entry.kb_value = LETTER('Z'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2d; entry.kb_value = LETTER('X'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2e; entry.kb_value = LETTER('C'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2f; entry.kb_value = LETTER('V'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x30; entry.kb_value = LETTER('B'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x31; entry.kb_value = LETTER('N'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x32; entry.kb_value = LETTER('M'); ioctl(fd, KDSKBENT, &entry);
     
     // Turkish-specific keys
-    entry.kb_index = 0x33; entry.kb_value = 0xd6; ioctl(fd, KDSKBENT, &entry); // Ö
-    entry.kb_index = 0x34; entry.kb_value = 0xc7; ioctl(fd, KDSKBENT, &entry); // Ç
+    entry.kb_index = 0x33; entry.kb_value = LETTER(TR_O_diaer); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x34; entry.kb_value = LETTER(TR_C_cedil); ioctl(fd, KDSKBENT, &entry);
     
     // Symbols stay normal with Caps Lock
     entry.kb_index = 0x29; entry.kb_value = '"'; ioctl(fd, KDSKBENT, &entry);
@@ -233,48 +249,48 @@ static void load_turkish_q(int fd) {
     entry.kb_table = 3;
     
     // All standard letter keys lowercase (QWERTY row)
-    entry.kb_index = 0x10; entry.kb_value = 'q'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x11; entry.kb_value = 'w'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x12; entry.kb_value = 'e'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x13; entry.kb_value = 'r'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x14; entry.kb_value = 't'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x15; entry.kb_value = 'y'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x16; entry.kb_value = 'u'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x17; entry.kb_value = 'i'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x18; entry.kb_value = 'o'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x19; entry.kb_value = 'p'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x10; entry.kb_value = LETTER('q'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x11; entry.kb_value = LETTER('w'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x12; entry.kb_value = LETTER('e'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x13; entry.kb_value = LETTER('r'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x14; entry.kb_value = LETTER('t'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x15; entry.kb_value = LETTER('y'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x16; entry.kb_value = LETTER('u'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x17; entry.kb_value = LETTER('i'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x18; entry.kb_value = LETTER('o'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x19; entry.kb_value = LETTER('p'); ioctl(fd, KDSKBENT, &entry);
     
     // Turkish-specific keys (lowercase)
-    entry.kb_index = 0x1a; entry.kb_value = 0xf0; ioctl(fd, KDSKBENT, &entry); // ğ
-    entry.kb_index = 0x1b; entry.kb_value = 0xfc; ioctl(fd, KDSKBENT, &entry); // ü
+    entry.kb_index = 0x1a; entry.kb_value = LETTER(TR_g_breve); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1b; entry.kb_value = LETTER(TR_u_diaer); ioctl(fd, KDSKBENT, &entry);
     
     // ASDF row lowercase
-    entry.kb_index = 0x1e; entry.kb_value = 'a'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x1f; entry.kb_value = 's'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x20; entry.kb_value = 'd'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x21; entry.kb_value = 'f'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x22; entry.kb_value = 'g'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x23; entry.kb_value = 'h'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x24; entry.kb_value = 'j'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x25; entry.kb_value = 'k'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x26; entry.kb_value = 'l'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1e; entry.kb_value = LETTER('a'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x1f; entry.kb_value = LETTER('s'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x20; entry.kb_value = LETTER('d'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x21; entry.kb_value = LETTER('f'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x22; entry.kb_value = LETTER('g'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x23; entry.kb_value = LETTER('h'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x24; entry.kb_value = LETTER('j'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x25; entry.kb_value = LETTER('k'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x26; entry.kb_value = LETTER('l'); ioctl(fd, KDSKBENT, &entry);
     
     // Turkish-specific keys
-    entry.kb_index = 0x27; entry.kb_value = 0xfe; ioctl(fd, KDSKBENT, &entry); // ş
-    entry.kb_index = 0x28; entry.kb_value = 'i'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x27; entry.kb_value = LETTER(TR_s_cedil); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x28; entry.kb_value = LETTER('i'); ioctl(fd, KDSKBENT, &entry);
     
     // ZXCV row lowercase
-    entry.kb_index = 0x2c; entry.kb_value = 'z'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x2d; entry.kb_value = 'x'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x2e; entry.kb_value = 'c'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x2f; entry.kb_value = 'v'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x30; entry.kb_value = 'b'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x31; entry.kb_value = 'n'; ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x32; entry.kb_value = 'm'; ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2c; entry.kb_value = LETTER('z'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2d; entry.kb_value = LETTER('x'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2e; entry.kb_value = LETTER('c'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x2f; entry.kb_value = LETTER('v'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x30; entry.kb_value = LETTER('b'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x31; entry.kb_value = LETTER('n'); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x32; entry.kb_value = LETTER('m'); ioctl(fd, KDSKBENT, &entry);
     
     // Turkish-specific keys
-    entry.kb_index = 0x33; entry.kb_value = 0xf6; ioctl(fd, KDSKBENT, &entry); // ö
-    entry.kb_index = 0x34; entry.kb_value = 0xe7; ioctl(fd, KDSKBENT, &entry); // ç
+    entry.kb_index = 0x33; entry.kb_value = LETTER(TR_o_diaer); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x34; entry.kb_value = LETTER(TR_c_cedil); ioctl(fd, KDSKBENT, &entry);
     
     // Shifted symbols with Caps Lock
     entry.kb_index = 0x29; entry.kb_value = 0xe9; ioctl(fd, KDSKBENT, &entry); // é
@@ -308,8 +324,8 @@ static void load_turkish_f(int fd) {
     // Row 1 (QWERTY row becomes FGĞIOD) - use letter type
     entry.kb_index = 0x10; entry.kb_value = LETTER('f'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x11; entry.kb_value = LETTER('g'); ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x12; entry.kb_value = LETTER(0xf0); ioctl(fd, KDSKBENT, &entry); // ğ
-    entry.kb_index = 0x13; entry.kb_value = LETTER(0xfd); ioctl(fd, KDSKBENT, &entry); // ı
+    entry.kb_index = 0x12; entry.kb_value = LETTER(TR_g_breve); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x13; entry.kb_value = LETTER(TR_i_nodot); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x14; entry.kb_value = LETTER('o'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x15; entry.kb_value = LETTER('d'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x16; entry.kb_value = LETTER('r'); ioctl(fd, KDSKBENT, &entry);
@@ -324,21 +340,21 @@ static void load_turkish_f(int fd) {
     entry.kb_index = 0x1f; entry.kb_value = LETTER('i'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x20; entry.kb_value = LETTER('e'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x21; entry.kb_value = LETTER('a'); ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x22; entry.kb_value = LETTER(0xfc); ioctl(fd, KDSKBENT, &entry); // ü
+    entry.kb_index = 0x22; entry.kb_value = LETTER(TR_u_diaer); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x23; entry.kb_value = LETTER('t'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x24; entry.kb_value = LETTER('k'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x25; entry.kb_value = LETTER('m'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x26; entry.kb_value = LETTER('l'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x27; entry.kb_value = LETTER('y'); ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x28; entry.kb_value = LETTER(0xfe); ioctl(fd, KDSKBENT, &entry); // ş
+    entry.kb_index = 0x28; entry.kb_value = LETTER(TR_s_cedil); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x2b; entry.kb_value = LETTER('x'); ioctl(fd, KDSKBENT, &entry);
     
     // Row 3 (ZXCV row becomes JÖVCÇ) - use letter type
     entry.kb_index = 0x2c; entry.kb_value = LETTER('j'); ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x2d; entry.kb_value = LETTER(0xf6); ioctl(fd, KDSKBENT, &entry); // ö
+    entry.kb_index = 0x2d; entry.kb_value = LETTER(TR_o_diaer); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x2e; entry.kb_value = LETTER('v'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x2f; entry.kb_value = LETTER('c'); ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x30; entry.kb_value = LETTER(0xe7); ioctl(fd, KDSKBENT, &entry); // ç
+    entry.kb_index = 0x30; entry.kb_value = LETTER(TR_c_cedil); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x31; entry.kb_value = LETTER('z'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x32; entry.kb_value = LETTER('s'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x33; entry.kb_value = LETTER('b'); ioctl(fd, KDSKBENT, &entry);
@@ -351,8 +367,8 @@ static void load_turkish_f(int fd) {
     // Row 1 (shifted: FGĞIOD -> uppercase) - use letter type
     entry.kb_index = 0x10; entry.kb_value = LETTER('F'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x11; entry.kb_value = LETTER('G'); ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x12; entry.kb_value = LETTER(0xd0); ioctl(fd, KDSKBENT, &entry); // Ğ
-    entry.kb_index = 0x13; entry.kb_value = LETTER('I'); ioctl(fd, KDSKBENT, &entry); // I (capital dotless)
+    entry.kb_index = 0x12; entry.kb_value = LETTER(TR_G_breve); ioctl(fd, KDSKBENT, &entry);
+    entry.kb_index = 0x13; entry.kb_value = LETTER('I'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x14; entry.kb_value = LETTER('O'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x15; entry.kb_value = LETTER('D'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x16; entry.kb_value = LETTER('R'); ioctl(fd, KDSKBENT, &entry);
@@ -364,24 +380,24 @@ static void load_turkish_f(int fd) {
     
     // Row 2 (shifted: UİEAÜT -> uppercase) - use letter type
     entry.kb_index = 0x1e; entry.kb_value = LETTER('U'); ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x1f; entry.kb_value = LETTER(0xdd); ioctl(fd, KDSKBENT, &entry); // İ
+    entry.kb_index = 0x1f; entry.kb_value = LETTER(TR_I_dot); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x20; entry.kb_value = LETTER('E'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x21; entry.kb_value = LETTER('A'); ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x22; entry.kb_value = LETTER(0xdc); ioctl(fd, KDSKBENT, &entry); // Ü
+    entry.kb_index = 0x22; entry.kb_value = LETTER(TR_U_diaer); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x23; entry.kb_value = LETTER('T'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x24; entry.kb_value = LETTER('K'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x25; entry.kb_value = LETTER('M'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x26; entry.kb_value = LETTER('L'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x27; entry.kb_value = LETTER('Y'); ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x28; entry.kb_value = LETTER(0xde); ioctl(fd, KDSKBENT, &entry); // Ş
+    entry.kb_index = 0x28; entry.kb_value = LETTER(TR_S_cedil); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x2b; entry.kb_value = LETTER('X'); ioctl(fd, KDSKBENT, &entry);
     
     // Row 3 (shifted: JÖVCÇ -> uppercase) - use letter type
     entry.kb_index = 0x2c; entry.kb_value = LETTER('J'); ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x2d; entry.kb_value = LETTER(0xd6); ioctl(fd, KDSKBENT, &entry); // Ö
+    entry.kb_index = 0x2d; entry.kb_value = LETTER(TR_O_diaer); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x2e; entry.kb_value = LETTER('V'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x2f; entry.kb_value = LETTER('C'); ioctl(fd, KDSKBENT, &entry);
-    entry.kb_index = 0x30; entry.kb_value = LETTER(0xc7); ioctl(fd, KDSKBENT, &entry); // Ç
+    entry.kb_index = 0x30; entry.kb_value = LETTER(TR_C_cedil); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x31; entry.kb_value = LETTER('Z'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x32; entry.kb_value = LETTER('S'); ioctl(fd, KDSKBENT, &entry);
     entry.kb_index = 0x33; entry.kb_value = LETTER('B'); ioctl(fd, KDSKBENT, &entry);
