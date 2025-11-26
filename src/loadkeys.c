@@ -24,26 +24,62 @@
 // Helper macros for key types
 #define LETTER(c) K(KT_LETTER, (c))
 
-// Turkish character Unicode mappings for Linux console
+// Turkish character mappings (ISO-8859-9 / Latin-5)
+// These are byte values that fit in the 8-bit range (0-255)
 // Lowercase
-#define TR_g_breve  0x011F  // ğ
-#define TR_u_diaer  0x00FC  // ü  
-#define TR_s_cedil  0x015F  // ş
-#define TR_i_nodot  0x0131  // ı
-#define TR_o_diaer  0x00F6  // ö
-#define TR_c_cedil  0x00E7  // ç
+#define TR_g_breve  0xF0  // ğ (Latin-5: 240)
+#define TR_u_diaer  0xFC  // ü (Latin-1: 252)
+#define TR_s_cedil  0xFE  // ş (Latin-5: 254)
+#define TR_i_nodot  0xFD  // ı (Latin-5: 253)
+#define TR_o_diaer  0xF6  // ö (Latin-1: 246)
+#define TR_c_cedil  0xE7  // ç (Latin-1: 231)
 // Uppercase
-#define TR_G_breve  0x011E  // Ğ
-#define TR_U_diaer  0x00DC  // Ü
-#define TR_S_cedil  0x015E  // Ş
-#define TR_I_dot    0x0130  // İ
-#define TR_O_diaer  0x00D6  // Ö
-#define TR_C_cedil  0x00C7  // Ç
+#define TR_G_breve  0xD0  // Ğ (Latin-5: 208)
+#define TR_U_diaer  0xDC  // Ü (Latin-1: 220)
+#define TR_S_cedil  0xDE  // Ş (Latin-5: 222)
+#define TR_I_dot    0xDD  // İ (Latin-5: 221)
+#define TR_O_diaer  0xD6  // Ö (Latin-1: 214)
+#define TR_C_cedil  0xC7  // Ç (Latin-1: 199)
 
 // Simple write wrapper
 static void write_str(const char *str) {
     ssize_t ret = write(1, str, strlen(str));
     (void)ret;  // Ignore return value intentionally
+}
+
+// Enable UTF-8 mode on console for proper Turkish character display
+static void enable_utf8_mode(int fd) {
+    // Set console to UTF-8 mode
+    if (ioctl(fd, KDSKBMODE, K_UNICODE) < 0) {
+        // Fallback to K_XLATE if K_UNICODE fails
+        ioctl(fd, KDSKBMODE, K_XLATE);
+    }
+}
+
+// Set up Unicode map for Turkish characters (ISO-8859-9 / Latin-5)
+static void setup_turkish_unicode_map(int fd) {
+    struct unipair turkish_map[] = {
+        // Turkish-specific characters mapping Latin-5 positions to Unicode
+        { 0x00C7, 0xC7 },  // Ç -> position 199
+        { 0x00D6, 0xD6 },  // Ö -> position 214
+        { 0x00DC, 0xDC },  // Ü -> position 220
+        { 0x00E7, 0xE7 },  // ç -> position 231
+        { 0x00F6, 0xF6 },  // ö -> position 246
+        { 0x00FC, 0xFC },  // ü -> position 252
+        { 0x011E, 0xD0 },  // Ğ -> position 208
+        { 0x011F, 0xF0 },  // ğ -> position 240
+        { 0x0130, 0xDD },  // İ -> position 221
+        { 0x0131, 0xFD },  // ı -> position 253
+        { 0x015E, 0xDE },  // Ş -> position 222
+        { 0x015F, 0xFE },  // ş -> position 254
+    };
+    
+    struct unimapdesc desc;
+    desc.entry_ct = sizeof(turkish_map) / sizeof(struct unipair);
+    desc.entries = turkish_map;
+    
+    // Set the Unicode map
+    ioctl(fd, PIO_UNIMAP, &desc);
 }
 
 // Turkish Q layout modifications (scan code -> key code mapping)
@@ -778,11 +814,19 @@ int main(int argc, char *argv[]) {
         load_us_english(fd);
         write_str(ERDEMOS_PRIMARY_COLOR "Keyboard layout set to: " ERDEMOS_COMMAND_COLOR "English (US)" COLOR_RESET "\n");
     } else if (strcmp(layout, "trq") == 0) {
+        // Enable UTF-8 mode for Turkish character support
+        enable_utf8_mode(fd);
+        // Set up Unicode mappings for Turkish characters
+        setup_turkish_unicode_map(fd);
         // First load US as base, then apply Turkish Q modifications
         load_us_english(fd);
         load_turkish_q(fd);
         write_str(ERDEMOS_PRIMARY_COLOR "Keyboard layout set to: " ERDEMOS_COMMAND_COLOR "Turkish Q" COLOR_RESET "\n");
     } else if (strcmp(layout, "trf") == 0) {
+        // Enable UTF-8 mode for Turkish character support
+        enable_utf8_mode(fd);
+        // Set up Unicode mappings for Turkish characters
+        setup_turkish_unicode_map(fd);
         load_turkish_f(fd);
         write_str(ERDEMOS_PRIMARY_COLOR "Keyboard layout set to: " ERDEMOS_COMMAND_COLOR "Turkish F" COLOR_RESET "\n");
     }
